@@ -4,11 +4,12 @@
     // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
+    "moduleResolution": "node",
 
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    "module": "esnext",
     "target": "esnext",
     "types": [],
     // For nodejs:
@@ -36,7 +37,7 @@
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
@@ -45,5 +46,5 @@
   "exclude": [
     "jest.**",
     "dist"
-  ]
+  ],
 }
