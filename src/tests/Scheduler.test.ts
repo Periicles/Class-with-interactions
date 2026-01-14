@@ -37,4 +37,23 @@ describe("Scheduler", () => {
     const schedulerTasks = scheduler.getTasks();
     expect(schedulerTasks).toEqual(tasks);
   })
+
+  it("should return an error when have missing task properties", () => {
+    const tasks: any[] = [
+      {
+        name: "task1",
+        callback: () => { console.log("Task 1 executed"); }
+      },
+      {
+        periodicity: {},
+        callback: () => { console.log("Task 2 executed"); }
+      },
+      {
+        name: "task3",
+        periodicity: {}
+      }
+    ]
+
+    expect(() => new Scheduler(tasks)).toThrow();
+  })
 })
