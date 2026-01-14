@@ -13,6 +13,12 @@ describe("Scheduler", () => {
     expect(() => new Scheduler(null as unknown as Task[])).toThrow();
   })
 
+  it("should return an empty task list", () => {
+    const scheduler = new Scheduler([]);
+    expect(scheduler.getTasks()).not.toBeNull();
+    expect(scheduler.getTasks()).toHaveLength(0);
+  })
+
   it("should set and get tasks in init", () => {
     const tasks: Task[] = []
     const scheduler = new Scheduler(tasks);
