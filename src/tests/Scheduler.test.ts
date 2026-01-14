@@ -1,10 +1,16 @@
 import { describe, it, expect } from "@jest/globals";
 import { Scheduler } from "../Scheduler";
 import { Task } from "../types/task.types";
+
 describe("Scheduler", () => {
   it("should create a Scheduler instance", () => {
     const scheduler = new Scheduler([]);
     expect(scheduler).toBeInstanceOf(Scheduler);
+    expect (scheduler.getTasks()).toEqual([]);
+  })
+
+  it("should not create a Scheduler instance", () => {
+    expect(() => new Scheduler(null as unknown as Task[])).toThrow();
   })
 
   it("should set and get tasks in init", () => {
