@@ -58,8 +58,8 @@ describe("Scheduler", () => {
     scheduler.setTask("backup", "* * 12 1/1 * ? *", callback);
     const tasks = scheduler.getTasks();
     expect(tasks).toHaveLength(1);
-    expect(tasks[0]!.getName).toBe("backup");
-    expect(tasks[0]!.getPeriodicity).toBe("* * 12 1/1 * ? *");
+    expect(tasks[0]!.getName()).toBe("backup");
+    expect(tasks[0]!.getPeriodicity()).toBe("* * 12 1/1 * ? *");
     expect(() => tasks[0]!.getCallback()).not.toThrow();
   })
 })
