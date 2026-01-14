@@ -5,4 +5,12 @@ describe("Scheduler", () => {
     const scheduler = new Scheduler();
     expect(scheduler).toBeInstanceOf(Scheduler);
   })
+
+  it("should set and get tasks in init", () => {
+    const tasks = []
+    const scheduler = new Scheduler();
+    const schedulerTasks = scheduler.getTasks();
+    expect(schedulerTasks).toEqual(tasks);
+  })
+
 })
