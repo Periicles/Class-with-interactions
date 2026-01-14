@@ -1,5 +1,9 @@
 export type Task = {
   name: string;
-  periodicity: unknown;
+  periodicity: string;
   callback: () => void | Promise<void>;
+};
+
+export interface Clock {
+  now(): Date;
 }

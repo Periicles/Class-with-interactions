@@ -1,13 +1,19 @@
-import { Task } from "./types/task.types";
+import { Task, Clock } from "./types/task.types";
 
 export class Scheduler {
+  private tasks: Task[] = [];
+
   constructor(
-    private tasks: Task[]
-  ) {
-    for (const task of tasks) {
-      if (!task.name || !task.periodicity || !task.callback) {
-        throw new Error("Each task must have name, periodicity and callback properties.");
-      }
+    private clock: Clock
+  ) {}
+
+  setTask(name: string, periodicity: string, callback: () => void | Promise<void>): void {
+    const existingIndex = this.tasks.findIndex(task => task.name === name);
+    
+    if (existingIndex !== -1) {
+      this.tasks[existingIndex] = { name, periodicity, callback };
+    } else {
+      this.tasks.push({ name, periodicity, callback });
     }
   }
 
