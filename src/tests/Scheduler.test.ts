@@ -1,76 +1,58 @@
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect, beforeEach } from "@jest/globals";
 import { Scheduler } from "../Scheduler";
-import { Task } from "../types/task.types";
+import { Clock } from "../types/task.types";
 
 describe("Scheduler", () => {
+  let mockClock: Clock;
+
+  beforeEach(() => {
+    mockClock = { now: jest.fn(() => new Date()) };
+  });
+
   it("should create a Scheduler instance", () => {
-    const scheduler = new Scheduler([]);
+    const scheduler = new Scheduler(mockClock);
     expect(scheduler).toBeInstanceOf(Scheduler);
     expect(scheduler.getTasks()).toEqual([]);
   })
 
   it("should not create a Scheduler instance", () => {
-    expect(() => new Scheduler(null as unknown as Task[])).toThrow();
+    expect(() => new Scheduler(null as unknown as Clock)).toThrow();
   })
 
   it("should return an empty task list", () => {
-    const scheduler = new Scheduler([]);
+    const scheduler = new Scheduler(mockClock);
     expect(scheduler.getTasks()).not.toBeNull();
     expect(scheduler.getTasks()).toHaveLength(0);
   })
 
   it("should set and get tasks in init", () => {
-    const tasks: Task[] = []
-    const scheduler = new Scheduler(tasks);
+    const scheduler = new Scheduler(mockClock);
     const schedulerTasks = scheduler.getTasks();
-    expect(schedulerTasks).toEqual(tasks);
+    expect(schedulerTasks).toEqual([]);
   });
 
   it("should return an array of tasks", () => {
-    const tasks: Task[] = [
-      {
-        name: "task1",
-        periodicity: {},
-        callback: () => { console.log("Task 1 executed"); }
-      },
-      {
-        name: "task2",
-        periodicity: {},
-        callback: () => { console.log("Task 2 executed"); }
-      },
-      {
-        name: "task3",
-        periodicity: {},
-        callback: () => { console.log("Task 3 executed"); }
-      }
-    ]
+    const scheduler = new Scheduler(mockClock);
+    const callback1 = jest.fn();
+    const callback2 = jest.fn();
+    const callback3 = jest.fn();
 
-    const scheduler = new Scheduler(tasks);
+    scheduler.setTask("task1", "0 0 * * *", callback1);
+    scheduler.setTask("task2", "0 * * * *", callback2);
+    scheduler.setTask("task3", "*/15 * * * *", callback3);
+
     const schedulerTasks = scheduler.getTasks();
-    expect(schedulerTasks).toEqual(tasks);
+    expect(schedulerTasks).toHaveLength(3);
+    expect(schedulerTasks[0].name).toBe("task1");
+    expect(schedulerTasks[1].name).toBe("task2");
+    expect(schedulerTasks[2].name).toBe("task3");
   })
 
-  it("should return an error when have missing task properties", () => {
-    const tasks: any[] = [
-      {
-        name: "task1",
-        callback: () => { console.log("Task 1 executed"); }
-      },
-      {
-        periodicity: {},
-        callback: () => { console.log("Task 2 executed"); }
-      },
-      {
-        name: "task3",
-        periodicity: {}
-      }
-    ]
-
-    expect(() => new Scheduler(tasks)).toThrow();
+  it("should return an error when Clock is null", () => {
+    expect(() => new Scheduler(null as unknown as Clock)).toThrow();
   })
 
   it("should add a task", () => {
-    const mockClock = { now: jest.fn(() => new Date()) };
     const scheduler = new Scheduler(mockClock);
     const callback = jest.fn();
     scheduler.setTask("backup", "* * 12 1/1 * ? *", callback);

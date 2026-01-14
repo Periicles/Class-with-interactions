@@ -5,7 +5,11 @@ export class Scheduler {
 
   constructor(
     private clock: Clock
-  ) {}
+  ) {
+    if (!clock) {
+      throw new Error("Clock cannot be null or undefined");
+    }
+  }
 
   setTask(name: string, periodicity: string, callback: () => void | Promise<void>): void {
     const existingIndex = this.tasks.findIndex(task => task.name === name);
