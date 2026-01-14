@@ -6,7 +6,7 @@ describe("Scheduler", () => {
   it("should create a Scheduler instance", () => {
     const scheduler = new Scheduler([]);
     expect(scheduler).toBeInstanceOf(Scheduler);
-    expect (scheduler.getTasks()).toEqual([]);
+    expect(scheduler.getTasks()).toEqual([]);
   })
 
   it("should not create a Scheduler instance", () => {
@@ -67,5 +67,17 @@ describe("Scheduler", () => {
     ]
 
     expect(() => new Scheduler(tasks)).toThrow();
+  })
+
+  it("should add a task", () => {
+    const mockClock = { now: jest.fn(() => new Date()) };
+    const scheduler = new Scheduler(mockClock);
+    const callback = jest.fn();
+    scheduler.setTask("backup", "* * 12 1/1 * ? *", callback);
+    const tasks = scheduler.getTasks();
+    expect(tasks).toHaveLength(1);
+    expect(tasks[0].name).toBe("backup");
+    expect(tasks[0].periodicity).toBe("* * 12 1/1 * ? *");
+    expect(() => tasks[0].callback()).not.toThrow();
   })
 })
