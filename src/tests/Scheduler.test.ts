@@ -88,5 +88,14 @@ describe("Scheduler", () => {
       expect(tasks.get("backup")!.getPeriodicity()).toBe("* * 12 1/2 * ? *");
       expect(tasks.get("backup")!.getCallback()).toBe(callback2);
     })
+
+    it("should throw an error if parameter is null", () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      expect(() => scheduler.setTask(null as any, "* * 12 1/1 * ? *", callback)).toThrow();
+      expect(() => scheduler.setTask("backup", null as any, callback)).toThrow();
+      expect(() => scheduler.setTask("backup", "* * 12 1/1 * ? *", null as any)).toThrow();
+    })
   });
 });
