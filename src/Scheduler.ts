@@ -22,13 +22,24 @@ export class Scheduler {
   }
 
   /**
-   * Function that adds a task to the scheduler
+   * Function that adds or updates a task in the scheduler
    * @param name - name of the task
    * @param periodicity - cron expression for periodicity
    * @param callback - callback function to execute
    */
-  setTask(name: string, periodicity: string, callback: () => void | Promise<void>): void {
-    const task = new Task(name, periodicity, callback);
-    this.tasks.push(task);
+  setTask(
+    name: string,
+    periodicity: string,
+    callback: () => void | Promise<void>
+  ): void {
+    for (const task of this.tasks) {
+      if (task.getName() === name) {
+        task.setPeriodicity(periodicity);
+        task.setCallback(callback);
+        return;
+      }
+    }
+    const newTask = new Task(name, periodicity, callback);
+    this.tasks.push(newTask);
   }
 }
