@@ -34,6 +34,15 @@ export class Scheduler {
     periodicity: string,
     callback: () => void | Promise<void>
   ): void {
+    if (!name) {
+      throw new Error("Task name cannot be null or undefined");
+    }
+    if (!periodicity) {
+      throw new Error("Task periodicity cannot be null or undefined");
+    }
+    if (!callback) {
+      throw new Error("Task callback cannot be null or undefined");
+    }
     const task = new Task(name, periodicity, callback);
     this.tasks.set(name, task);
   }
