@@ -3,26 +3,28 @@ import { Clock } from "./types/task.types";
 
 export class Scheduler {
   private readonly clock: Clock;
-  private readonly tasks: Task[];
+  private readonly tasks: Map<string, Task>;
 
   constructor(clock: Clock) {
     if (!clock) {
       throw new Error("Clock cannot be null or undefined");
     }
     this.clock = clock;
-    this.tasks = [];
+    this.tasks = new Map();
   }
 
   /**
-   * Function that returns the list of tasks
-   * @return list of tasks
+   * Function that returns the map of tasks
+   *
+   * @return map of tasks indexed by name
    */
-  getTasks(): Task[] {
+  getTasks(): Map<string, Task> {
     return this.tasks;
   }
 
   /**
    * Function that adds or updates a task in the scheduler
+   *
    * @param name - name of the task
    * @param periodicity - cron expression for periodicity
    * @param callback - callback function to execute
@@ -32,14 +34,7 @@ export class Scheduler {
     periodicity: string,
     callback: () => void | Promise<void>
   ): void {
-    for (const task of this.tasks) {
-      if (task.getName() === name) {
-        task.setPeriodicity(periodicity);
-        task.setCallback(callback);
-        return;
-      }
-    }
-    const newTask = new Task(name, periodicity, callback);
-    this.tasks.push(newTask);
+    const task = new Task(name, periodicity, callback);
+    this.tasks.set(name, task);
   }
 }
