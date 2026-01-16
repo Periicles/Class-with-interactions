@@ -167,5 +167,17 @@ describe("Scheduler", () => {
 
       expect(callback).toHaveBeenCalledTimes(0);
     })
+
+    it("should retrieve error when task periodicity is invalid", async () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      // Schedule task with invalid cron expression
+      scheduler.setTask("backup", "invalid cron", callback);
+
+      // Simulate time passing and task execution
+      (mockClock.now as jest.Mock).mockReturnValueOnce(new Date());
+      await expect(() => scheduler.executeTasks()).toThrow();
+    })
   })
 });
