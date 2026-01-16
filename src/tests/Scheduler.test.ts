@@ -133,4 +133,22 @@ describe("Scheduler", () => {
       expect(() => scheduler.removeTask("nonExistingTask")).toThrow();
     });
   });
+
+  describe("task execution", () => {
+    it("should execute a task callback every minutes", async () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      scheduler.setTask("backup", "* * * * *", callback);
+
+      // Simulate time passing and task execution
+      for (let i = 0; i < 5; i++) {
+        // Advance mock clock by one minute
+        (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(Date.now() + (i + 1) * 60000));
+        await scheduler.executeTasks();
+      }
+
+      expect(callback).toHaveBeenCalledTimes(5);
+    })
+  })
 });
