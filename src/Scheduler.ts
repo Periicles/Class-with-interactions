@@ -76,4 +76,13 @@ export class Scheduler {
     const task = new Task(name, periodicity, callback);
     this.tasks.set(name, task);
   }
+
+  /**
+   * Function that removes a task from the scheduler by name
+   *
+   * @param name - name of the task to remove
+   */
+  removeTask(name: string): void {
+    this.tasks.delete(name);
+  }
 }
