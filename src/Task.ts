@@ -1,3 +1,5 @@
+import { parseCron } from "./utils/parse-cron";
+
 export class Task {
   private name: string;
   private periodicity: string;
@@ -27,6 +29,17 @@ export class Task {
 
   setPeriodicity(periodicity: string): void {
     this.periodicity = periodicity;
+  }
+
+  shouldExecuteAt(date: Date): boolean {
+    const cronResult = parseCron(this.periodicity)
+    const minutes = cronResult.minutes;
+
+    if (!minutes.includes(date.getMinutes())) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   setCallback(callback: () => void | Promise<void>): void {

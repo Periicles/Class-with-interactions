@@ -88,4 +88,24 @@ export class Scheduler {
     }
     this.tasks.delete(name);
   }
+
+  /**
+   * Function that executes tasks based on their schedule
+   */
+  executeTasks(): void {
+    const now = this.clock.now();
+
+    this.tasks.forEach((task) => {
+      if (task.shouldExecuteAt(now)) {
+        try {
+          task.getCallback()();
+        } catch (error) {
+          console.error(
+            `Error executing task ${task.getName()}:`,
+            (error as Error).message
+          );
+        }
+      }
+    })
+  }
 }
