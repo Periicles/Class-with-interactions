@@ -113,4 +113,19 @@ describe("Scheduler", () => {
       expect(() => scheduler.setTask("backup", "* * 12 1/1 * ? *", null as any)).toThrow();
     })
   });
+
+  describe("task removal", () => {
+    it("should remove a task", () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      scheduler.setTask("backup", "* * 12 1/1 * ? *", callback);
+      let tasks = scheduler.getTasks();
+      expect(tasks.size).toBe(1);
+
+      scheduler.removeTask("backup");
+      tasks = scheduler.getTasks();
+      expect(tasks.size).toBe(0);
+    })
+  });
 });
