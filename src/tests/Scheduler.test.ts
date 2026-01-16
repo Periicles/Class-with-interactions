@@ -127,5 +127,10 @@ describe("Scheduler", () => {
       tasks = scheduler.getTasks();
       expect(tasks.size).toBe(0);
     })
+
+    it("should throw an error when removing a non-existing task", () => {
+      const scheduler = new Scheduler(mockClock);
+      expect(() => scheduler.removeTask("nonExistingTask")).toThrow();
+    });
   });
 });
