@@ -83,6 +83,9 @@ export class Scheduler {
    * @param name - name of the task to remove
    */
   removeTask(name: string): void {
+    if (!this.tasks.has(name)) {
+      throw new Error(`Task with name ${name} does not exist`);
+    }
     this.tasks.delete(name);
   }
 }
