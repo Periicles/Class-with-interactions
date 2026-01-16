@@ -32,13 +32,17 @@ export class Task {
   }
 
   shouldExecuteAt(date: Date): boolean {
-    const cronResult = parseCron(this.periodicity)
-    const minutes = cronResult.minutes;
+    try {
+      const cronResult = parseCron(this.periodicity)
+      const minutes = cronResult.minutes;
 
-    if (!minutes.includes(date.getMinutes())) {
-      return false;
-    } else {
-      return true;
+      if (!minutes.includes(date.getMinutes())) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (error) {
+      throw new Error(`Invalid cron expression: ${this.periodicity}`);
     }
   }
 

@@ -40,6 +40,7 @@ export class Scheduler {
     if (!periodicity) {
       throw new Error("Task periodicity cannot be null or undefined");
     }
+
     if (!callback) {
       throw new Error("Task callback cannot be null or undefined");
     }
@@ -94,18 +95,22 @@ export class Scheduler {
    */
   executeTasks(): void {
     const now = this.clock.now();
-
-    this.tasks.forEach((task) => {
-      if (task.shouldExecuteAt(now)) {
-        try {
-          task.getCallback()();
-        } catch (error) {
-          console.error(
-            `Error executing task ${task.getName()}:`,
-            (error as Error).message
-          );
+    try {
+      this.tasks.forEach((task) => {
+        const execute = task.shouldExecuteAt(now);
+        if (execute) {
+          try {
+            task.getCallback()();
+          } catch (error) {
+            console.error(
+              `Error executing task ${task.getName()}:`,
+              (error as Error).message
+            );
+          }
         }
-      }
-    })
+      })
+    } catch (error) {
+      throw new Error(`Error executing tasks: ${(error as Error).message}`);
+    }
   }
 }
