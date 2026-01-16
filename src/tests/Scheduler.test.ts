@@ -95,7 +95,7 @@ describe("Scheduler", () => {
       expect(tasks.size).toBe(1);
       expect(tasks.get("backup")!.getPeriodicity()).toBe("* * 12 1/1 * ? *");
 
-      scheduler.setTask("backup", "* * 12 1/2 * ? *", callback2);
+      scheduler.updateTask("backup", "* * 12 1/2 * ? *", callback2);
       tasks = scheduler.getTasks();
 
       expect(tasks.size).toBe(1);
