@@ -43,6 +43,9 @@ export class Scheduler {
     if (!callback) {
       throw new Error("Task callback cannot be null or undefined");
     }
+    if (this.tasks.has(name)) {
+      throw new Error(`Task with name ${name} already exists`);
+    }
     const task = new Task(name, periodicity, callback);
     this.tasks.set(name, task);
   }
