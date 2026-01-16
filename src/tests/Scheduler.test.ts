@@ -69,6 +69,21 @@ describe("Scheduler", () => {
       expect(() => tasks.get("backup")!.getCallback()()).not.toThrow();
     })
 
+    it('should retrive error when adding a task with existing name', () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback1 = jest.fn<() => void>();
+      const callback2 = jest.fn<() => void>();
+
+      scheduler.setTask("backup", "* * 12 1/1 * ? *", callback1);
+      expect(() => scheduler.setTask("backup", "* * 12 1/1 * ? *", callback2)).toThrow();
+
+      const tasks = scheduler.getTasks();
+      expect(tasks.size).toBe(1);
+      expect(tasks.get("backup")!.getName()).toBe("backup");
+      expect(tasks.get("backup")!.getPeriodicity()).toBe("* * 12 1/1 * ? *");
+      expect(tasks.get("backup")!.getCallback()).toBe(callback1);
+    })
+
     it("should update a task", () => {
       const scheduler = new Scheduler(mockClock);
       const callback1 = jest.fn<() => void>();
