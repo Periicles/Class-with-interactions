@@ -150,5 +150,22 @@ describe("Scheduler", () => {
 
       expect(callback).toHaveBeenCalledTimes(5);
     })
+
+    it("should not execute a task callback if not scheduled", async () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      // Schedule task to run at minute 0 only
+      scheduler.setTask("backup", "0 0 * * *", callback);
+
+      // Simulate time passing and task execution
+      for (let i = 0; i < 5; i++) {
+        // Advance mock clock by one minute
+        (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(Date.now() + (i + 1) * 60000));
+        await scheduler.executeTasks();
+      }
+
+      expect(callback).toHaveBeenCalledTimes(0);
+    })
   })
 });
