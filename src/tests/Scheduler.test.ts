@@ -137,7 +137,7 @@ describe("Scheduler", () => {
   describe("task execution", () => {
     it("should execute update without task", async () => {
       const scheduler = new Scheduler(mockClock);
-      expect(async () => await scheduler.executeTasks()).not.toThrow();
+      await scheduler.executeTasks();
     })
 
     it("should execute a task callback every minutes", async () => {
