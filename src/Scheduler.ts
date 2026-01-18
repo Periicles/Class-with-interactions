@@ -48,38 +48,6 @@ export class Scheduler {
 
     validateCron(periodicity);
 
-    if (this.tasks.has(name)) {
-      throw new Error(`Task with name ${name} already exists`);
-    }
-    const task = new Task(name, periodicity, callback);
-    this.tasks.set(name, task);
-  }
-
-  /**
-   * Function that updates an existing task in the scheduler
-   *
-   * @param name - name of the task
-   * @param periodicity - new cron expression for periodicity
-   * @param callback - new callback function to execute
-   */
-  updateTask(
-    name: string,
-    periodicity: string,
-    callback: () => void | Promise<void>
-  ): void {
-    if (!name) {
-      throw new Error("Task name cannot be null or undefined");
-    }
-    if (!periodicity) {
-      throw new Error("Task periodicity cannot be null or undefined");
-    }
-    if (!callback) {
-      throw new Error("Task callback cannot be null or undefined");
-    }
-    if (!this.tasks.has(name)) {
-      throw new Error(`Task with name ${name} does not exist`);
-    }
-    validateCron(periodicity);
     const task = new Task(name, periodicity, callback);
     this.tasks.set(name, task);
   }
