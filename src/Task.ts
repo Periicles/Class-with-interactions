@@ -1,4 +1,4 @@
-import { parseCron } from "./utils/parse-cron";
+import { isCronMatch, validateCron } from "./utils/parse-cron";
 
 export class Task {
   private name: string;
@@ -6,6 +6,7 @@ export class Task {
   private callback: () => void | Promise<void>;
 
   constructor(name: string, periodicity: string, callback: () => void | Promise<void>) {
+    validateCron(periodicity);
     this.name = name;
     this.periodicity = periodicity;
     this.callback = callback;
@@ -28,22 +29,12 @@ export class Task {
   }
 
   setPeriodicity(periodicity: string): void {
+    validateCron(periodicity);
     this.periodicity = periodicity;
   }
 
   shouldExecuteAt(date: Date): boolean {
-    try {
-      const cronResult = parseCron(this.periodicity)
-      const minutes = cronResult.minutes;
-
-      if (!minutes.includes(date.getMinutes())) {
-        return false;
-      } else {
-        return true;
-      }
-    } catch (error) {
-      throw new Error(`Invalid cron expression: ${this.periodicity}`);
-    }
+    return isCronMatch(this.periodicity, date);
   }
 
   setCallback(callback: () => void | Promise<void>): void {

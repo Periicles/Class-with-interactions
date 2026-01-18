@@ -5,6 +5,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "cron-parser": "^4.9.0",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

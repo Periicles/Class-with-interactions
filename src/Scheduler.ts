@@ -1,6 +1,6 @@
 import { Task } from "./Task";
 import { Clock } from "./types/task.types";
-import { parseCron } from "./utils/parse-cron";
+import { validateCron } from "./utils/parse-cron";
 
 export class Scheduler {
   private readonly clock: Clock;
@@ -46,11 +46,7 @@ export class Scheduler {
       throw new Error("Task callback cannot be null or undefined");
     }
 
-    try {
-      parseCron(periodicity);
-    } catch (error) {
-      throw new Error(`Invalid cron expression: ${periodicity}`);
-    }
+    validateCron(periodicity);
 
     if (this.tasks.has(name)) {
       throw new Error(`Task with name ${name} already exists`);
@@ -83,6 +79,7 @@ export class Scheduler {
     if (!this.tasks.has(name)) {
       throw new Error(`Task with name ${name} does not exist`);
     }
+    validateCron(periodicity);
     const task = new Task(name, periodicity, callback);
     this.tasks.set(name, task);
   }

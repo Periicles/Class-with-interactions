@@ -168,13 +168,14 @@ describe("Scheduler", () => {
     })
 
     it("should execute a task callback every minutes", async () => {
+      const start = new Date("2026-01-16T10:00:00Z");
       const scheduler = new Scheduler(mockClock);
       const callback = jest.fn<() => void>();
 
       scheduler.setTask("backup", "* * * * *", callback);
 
       for (let i = 0; i < 5; i++) {
-        (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(Date.now() + (i + 1) * 60000));
+        (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(start.getTime() + (i + 1) * 60000));
         await scheduler.executeTasks();
       }
 
@@ -182,13 +183,14 @@ describe("Scheduler", () => {
     })
 
     it("should not execute a task callback if not scheduled", async () => {
+      const start = new Date("2026-01-16T10:00:00Z");
       const scheduler = new Scheduler(mockClock);
       const callback = jest.fn<() => void>();
 
       scheduler.setTask("backup", "30 15 * * *", callback);
 
       for (let i = 0; i < 5; i++) {
-        (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(Date.now() + (i + 1) * 60000));
+        (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(start.getTime() + (i + 1) * 60000));
         await scheduler.executeTasks();
       }
 
