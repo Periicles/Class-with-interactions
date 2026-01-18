@@ -145,6 +145,20 @@ describe("Scheduler", () => {
       expect(tasks.size).toBe(1);
       expect(tasks.get("backup")).toBeDefined();
     })
+
+    it("should throw error if adding task with wrong cron expression", () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      expect(() => scheduler.setTask("backup", "0 0 12", callback)).toThrow();
+      expect(() => scheduler.setTask("backup", "", callback)).toThrow();
+      expect(() => scheduler.setTask("backup", "0 0 12 *", callback)).toThrow();
+      expect(() => scheduler.setTask("backup", "0 0 26 * * *", callback)).toThrow();
+      expect(() => scheduler.setTask("backup", "tous les jours", callback)).toThrow();
+
+      const tasks = scheduler.getTasks();
+      expect(tasks.size).toBe(0);
+    })
   });
 
   describe("task execution", () => {
