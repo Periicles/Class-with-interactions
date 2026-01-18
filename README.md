@@ -1,5 +1,19 @@
 # Scheduler - Task Planning Class
 
+## Comment utiliser ?
+
+```bash
+# Installer les dépendances
+npm install
+```
+
+```bash
+# Lancer les tests
+npm test
+```
+
+## Sujet
+
 Individuellement ou en binôme, en adoptant une approche TDD, vous élaborez une classe déclenchant des tâches planifiées.
 
 ## ⚠️ Important
