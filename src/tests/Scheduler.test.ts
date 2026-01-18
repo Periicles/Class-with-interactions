@@ -146,9 +146,7 @@ describe("Scheduler", () => {
 
       scheduler.setTask("backup", "* * * * *", callback);
 
-      // Simulate time passing and task execution
       for (let i = 0; i < 5; i++) {
-        // Advance mock clock by one minute
         (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(Date.now() + (i + 1) * 60000));
         await scheduler.executeTasks();
       }
@@ -160,12 +158,9 @@ describe("Scheduler", () => {
       const scheduler = new Scheduler(mockClock);
       const callback = jest.fn<() => void>();
 
-      // Schedule task to run at minute 0 only
       scheduler.setTask("backup", "0 0 * * *", callback);
 
-      // Simulate time passing and task execution
       for (let i = 0; i < 5; i++) {
-        // Advance mock clock by one minute
         (mockClock.now as jest.Mock).mockReturnValueOnce(new Date(Date.now() + (i + 1) * 60000));
         await scheduler.executeTasks();
       }
@@ -177,12 +172,31 @@ describe("Scheduler", () => {
       const scheduler = new Scheduler(mockClock);
       const callback = jest.fn<() => void>();
 
-      // Schedule task with invalid cron expression
       scheduler.setTask("backup", "invalid cron", callback);
 
-      // Simulate time passing and task execution
       (mockClock.now as jest.Mock).mockReturnValueOnce(new Date());
       await expect(() => scheduler.executeTasks()).toThrow();
+    })
+
+    it("should run multiple tasks according to their periodicity", async () => {
+      const startTime = new Date("2026-01-16T10:00:00Z");
+      const mockClock: Clock = { now: jest.fn(() => startTime) };
+      const scheduler = new Scheduler(mockClock);
+      const callback1 = jest.fn<() => void>();
+      const callback2 = jest.fn<() => void>();
+
+      scheduler.setTask("backup", "* * * * *", callback1);
+      scheduler.setTask("backup2", "0,5,10,15 * * * *", callback2);
+
+      for (let i = 0; i < 16; i++) {
+        (mockClock.now as jest.Mock).mockReturnValue(
+          new Date(startTime.getTime() + i * 60000)
+        );
+        await scheduler.executeTasks();
+      }
+
+      expect(callback1).toHaveBeenCalledTimes(16);
+      expect(callback2).toHaveBeenCalledTimes(4);
     })
   })
 });
