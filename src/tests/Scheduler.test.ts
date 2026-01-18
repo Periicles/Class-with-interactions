@@ -134,6 +134,19 @@ describe("Scheduler", () => {
     });
   });
 
+  describe("cron validation", () => {
+    it("should add task with valid cron expression", () => {
+      const scheduler = new Scheduler(mockClock);
+      const callback = jest.fn<() => void>();
+
+      expect(() => scheduler.setTask("backup", "0 0 12 * * *", callback)).not.toThrow();
+
+      const tasks = scheduler.getTasks();
+      expect(tasks.size).toBe(1);
+      expect(tasks.get("backup")).toBeDefined();
+    })
+  });
+
   describe("task execution", () => {
     it("should execute update without task", async () => {
       const scheduler = new Scheduler(mockClock);
