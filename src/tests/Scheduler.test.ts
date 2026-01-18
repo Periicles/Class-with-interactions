@@ -135,6 +135,11 @@ describe("Scheduler", () => {
   });
 
   describe("task execution", () => {
+    it("should execute update without task", async () => {
+      const scheduler = new Scheduler(mockClock);
+      expect(async () => await scheduler.executeTasks()).not.toThrow();
+    })
+
     it("should execute a task callback every minutes", async () => {
       const scheduler = new Scheduler(mockClock);
       const callback = jest.fn<() => void>();
