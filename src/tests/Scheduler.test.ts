@@ -69,19 +69,24 @@ describe("Scheduler", () => {
       expect(() => tasks.get("backup")!.getCallback()()).not.toThrow();
     })
 
-    it('should retrive error when adding a task with existing name', () => {
+    it('should modify task when setting with same name', () => {
       const scheduler = new Scheduler(mockClock);
       const callback1 = jest.fn<() => void>();
       const callback2 = jest.fn<() => void>();
 
       scheduler.setTask("backup", "0 12 * * *", callback1);
-      expect(() => scheduler.setTask("backup", "0 12 * * *", callback2)).toThrow();
-
+      
       const tasks = scheduler.getTasks();
+      expect(tasks.size).toBe(1);
+      expect(tasks.get("backup")!.getPeriodicity()).toBe("0 12 * * *");
+      expect(tasks.get("backup")!.getCallback()).toBe(callback1);
+
+      scheduler.setTask("backup", "0 12 * * *", callback2);
+
       expect(tasks.size).toBe(1);
       expect(tasks.get("backup")!.getName()).toBe("backup");
       expect(tasks.get("backup")!.getPeriodicity()).toBe("0 12 * * *");
-      expect(tasks.get("backup")!.getCallback()).toBe(callback1);
+      expect(tasks.get("backup")!.getCallback()).toBe(callback2);
     })
 
     it("should update a task", () => {
@@ -95,7 +100,7 @@ describe("Scheduler", () => {
       expect(tasks.size).toBe(1);
       expect(tasks.get("backup")!.getPeriodicity()).toBe("0 12 * * *");
 
-      scheduler.updateTask("backup", "30 14 * * *", callback2);
+      scheduler.setTask("backup", "30 14 * * *", callback2);
       tasks = scheduler.getTasks();
 
       expect(tasks.size).toBe(1);
